@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Manage Your Digital Footprint | CyberAware</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #0d4d8f;
+      --secondary: #1abc9c;
+      --highlight: #f39c12;
+      --bg: #f5f5f5;
+      --text: #222;
+    }
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 110%;
+    }
+    .navbar {
+      background: linear-gradient(45deg, var(--primary), var(--secondary)) !important;
+    }
+    .navbar-brand {
+      color: #fff !important;
+      font-weight: 600;
+    }
+    .progress { height: 5px; margin: 0; border-radius: 0; }
+    .progress-bar { background: var(--secondary); }
+    #slides {
+      position: relative;
+      height: calc(100vh - 61px);
+      overflow: hidden;
+    }
+    .slide {
+      display: none;
+      height: 100%;
+      padding: 2rem;
+      box-sizing: border-box;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transition: background-color 0.5s;
+      background-color: #ffffff;
+    }
+    .slide.active { display: flex; }
+    .slide h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 4px solid var(--highlight);
+    }
+    .slide p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin-bottom: 1.5rem;
+    }
+    .video-container {
+      max-width: 800px;
+      width: 90%;
+      height: 450px;
+      margin: auto;
+    }
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      border: none;
+    }
+    .tips-list {
+      text-align: left;
+      max-width: 600px;
+      margin: 0 auto 1.5rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    .tips-list li { margin-bottom: 0.8rem; }
+    .scenario-btn, .quiz-btn { min-width: 140px; margin: .5rem; font-size: 1.1rem; }
+    .quiz-result, .feedback { margin-top: 1rem; font-size: 1.2rem; min-height: 1.3em; }
+    .wizard-nav {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%); display: flex; gap: 1rem;
+    }
+    .wizard-nav button { min-width: 100px; }
+    .step-indicator {
+      position: fixed; top: 61px; left: 50%;
+      transform: translateX(-50%); font-size: 1rem;
+      background: rgba(255,255,255,0.9); padding: 4px 10px;
+      border-radius: 4px; z-index: 1001;
+    }
+    .access-tools {
+      position: fixed; top: 70px; right: 20px;
+      display: flex; gap: .5rem; z-index: 1000;
+    }
+    .access-tools .btn { padding: .3rem .6rem; font-size: .9rem; }
+    .help-button {
+      position: fixed; bottom: 20px; right: 20px;
+      background: var(--highlight); color: #fff; border: none;
+      padding: 10px 20px; border-radius: 30px;
+      font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+    body.high-contrast { background: #000 !important; color: #fff !important; }
+    body.high-contrast .slide { background-color: #111 !important; color: #fff !important; }
+    body.high-contrast .btn-outline-primary {
+      background: #ffeb3b !important;
+      border-color: #ffeb3b !important;
+      color: #000 !important;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">CyberAware</a>
+    </div>
+  </nav>
+  <div class="progress">
+    <div id="progressBar" class="progress-bar" role="progressbar" style="width:0%"></div>
+  </div>
+  <div class="access-tools">
+    <button class="btn btn-sm btn-outline-primary" id="incFont">A+</button>
+    <button class="btn btn-sm btn-outline-primary" id="decFont">A-</button>
+    <button class="btn btn-sm btn-outline-secondary" id="toggleContrast">🌓</button>
+    <button class="btn btn-sm btn-outline-success" id="readAloud">🔊</button>
+  </div>
+  <div class="step-indicator" id="stepIndicator">Step 1 of 9</div>
+
+  <div id="slides">
+    <!-- Slide 1 -->
+    <div class="slide active">
+      <h2>Manage Your Digital Footprint</h2>
+      <p>Learn how to find, review, and control what information about you exists online. Click Next to begin.</p>
+    </div>
+    <!-- Slide 2 -->
+    <div class="slide">
+      <h2>Watch This Short Video</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/dmQGq_FNBpE" title="What is a Digital Footprint?" allowfullscreen></iframe>
+      </div>
+    </div>
+    <!-- Slide 3 -->
+    <div class="slide">
+      <h2>Quick Tips</h2>
+      <ul class="tips-list">
+        <li><strong>Google yourself:</strong> See what anyone can find about you.</li>
+        <li><strong>Delete old accounts:</strong> Remove profiles or blogs you no longer use.</li>
+        <li><strong>Opt out of data brokers:</strong> Visit sites like Spokeo or Whitepages to request removal.</li>
+        <li><strong>Limit sharing:</strong> Think before posting—once it’s out, it’s hard to remove.</li>
+      </ul>
+    </div>
+    <!-- Slide 4 -->
+    <div class="slide">
+      <h2>Scenario: Ghost Account</h2>
+      <p>You find a forum profile you created years ago with your full name and photo. What do you do?</p>
+      <button class="btn btn-outline-primary scenario-btn" onclick="document.getElementById('fb1').innerText='✔️ Good choice! Deleting outdated profiles helps control your presence.'">Delete the profile</button>
+      <button class="btn btn-outline-primary scenario-btn" onclick="document.getElementById('fb1').innerText='❌ Leaving it means your old data is still public.'">Leave it there</button>
+      <div class="feedback" id="fb1"></div>
+    </div>
+    <!-- Slide 5 -->
+    <div class="slide">
+      <h2>Scenario: Data Broker</h2>
+      <p>You see your home address on a people-search site. What now?</p>
+      <button class="btn btn-outline-primary scenario-btn" onclick="document.getElementById('fb2').innerText='✔️ Right! Using the opt-out form helps remove your info.'">Use their opt-out form</button>
+      <button class="btn btn-outline-primary scenario-btn" onclick="document.getElementById('fb2').innerText='❌ Ignoring it won’t make the info disappear.'">Ignore it</button>
+      <div class="feedback" id="fb2"></div>
+    </div>
+    <!-- Slide 6 -->
+    <div class="slide">
+      <h2>Quiz 1</h2>
+      <p>What’s the first step to check your online presence?</p>
+      <button class="btn btn-outline-primary quiz-btn" onclick="document.getElementById('q1').innerText='✔️ Correct! Google yourself to see what’s out there.'">Google your name</button>
+      <button class="btn btn-outline-primary quiz-btn" onclick="document.getElementById('q1').innerText='❌ Not quite. That’s useful, but start by searching for yourself.'">Change your password</button>
+      <div class="quiz-result" id="q1"></div>
+    </div>
+    <!-- Slide 7 -->
+    <div class="slide">
+      <h2>Quiz 2</h2>
+      <p>How can you remove outdated info from search results?</p>
+      <button class="btn btn-outline-primary quiz-btn" onclick="document.getElementById('q2').innerText='✔️ Yes! Contacting the site directly is a good first step.'">Request removal from the site</button>
+      <button class="btn btn-outline-primary quiz-btn" onclick="document.getElementById('q2').innerText='❌ Not the best choice. Try the site hosting the info first.'">Report it to Google</button>
+      <div class="quiz-result" id="q2"></div>
+    </div>
+    <!-- Slide 8 -->
+    <div class="slide">
+      <h2>Quiz 3</h2>
+      <p>Which action helps minimize your footprint?</p>
+      <button class="btn btn-outline-primary quiz-btn" onclick="document.getElementById('q3').innerText='✔️ Making accounts private limits who can see your data.'">Make accounts private</button>
+      <button class="btn btn-outline-primary quiz-btn" onclick="document.getElementById('q3').innerText='❌ This doesn’t reduce exposure—it just helps you keep a backup.'">Download all your data</button>
+      <div class="quiz-result" id="q3"></div>
+    </div>
+    <!-- Slide 9 -->
+    <div class="slide">
+      <h2>Well Done!</h2>
+      <p>You now know key steps to manage your digital footprint. Stay safe online!</p>
+      <button class="btn btn-warning" onclick="location.href='index.html'">Home</button>
+    </div>
+  </div>
+
+  <div class="wizard-nav">
+    <button class="btn btn-outline-primary" id="prevBtn">Back</button>
+    <button class="btn btn-primary" id="nextBtn">Next</button>
+  </div>
+
+  <button class="help-button" data-bs-toggle="modal" data-bs-target="#helpModal">Need Help?</button>
+  <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-dark">
+        <div class="modal-header">
+          <h5 class="modal-title" id="helpModalLabel">Need Help?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-grid gap-2">
+          <button class="btn btn-outline-primary" id="incFontModal">Bigger Text</button>
+          <button class="btn btn-outline-primary" id="decFontModal">Smaller Text</button>
+          <button class="btn btn-outline-secondary" id="toggleContrastModal">High Contrast</button>
+          <button class="btn btn-outline-success" id="readModal">Read Slide</button>
+          <button class="btn btn-outline-danger" id="stopModal">Stop Reading</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const stepInd = document.getElementById('stepIndicator');
+    const progressBar = document.getElementById('progressBar');
+    let current = 0;
+
+    function updateProgress(i) {
+      progressBar.style.width = ((i+1)/slides.length*100) + '%';
+    }
+    function showSlide(i) {
+      slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+      stepInd.innerText = `Step ${i+1} of ${slides.length}`;
+      prevBtn.style.visibility = i === 0 ? 'hidden' : 'visible';
+      nextBtn.innerText = i === slides.length - 1 ? 'Finish' : 'Next';
+      updateProgress(i);
+    }
+    prevBtn.onclick = () => { if (current > 0) current--; showSlide(current); };
+    nextBtn.onclick = () => {
+  if (current < slides.length - 1) {
+    current++;
+    showSlide(current);
+  } else {
+    window.location.href = 'index.html';
+  }
+};
+
+    // Accessibility
+    let fs = 110;
+    document.getElementById('incFont').onclick = () => { fs += 10; document.documentElement.style.fontSize = fs + '%'; };
+    document.getElementById('decFont').onclick = () => { if (fs > 90) fs -= 10; document.documentElement.style.fontSize = fs + '%'; };
+    document.getElementById('toggleContrast').onclick = () => document.body.classList.toggle('high-contrast');
+    function readSlide() {
+      const txt = slides[current].innerText;
+      if ('speechSynthesis' in window) {
+        speechSynthesis.cancel();
+        speechSynthesis.speak(new SpeechSynthesisUtterance(txt));
+      }
+    }
+    document.getElementById('readAloud').onclick = readSlide;
+    document.getElementById('incFontModal').onclick = () => document.getElementById('incFont').click();
+    document.getElementById('decFontModal').onclick = () => document.getElementById('decFont').click();
+    document.getElementById('toggleContrastModal').onclick = () => document.getElementById('toggleContrast').click();
+    document.getElementById('readModal').onclick = readSlide;
+    document.getElementById('stopModal').onclick = () => speechSynthesis.cancel();
+
+    showSlide(current);
+  </script>
+</body>
+</html>

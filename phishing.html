@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Phishing Wizard | CyberAware</title>
+  <!-- Bootstrap CSS & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #0d4d8f;
+      --secondary: #1abc9c;
+      --highlight: #f39c12;
+      --bg: #f5f5f5;
+      --text: #222;
+    }
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 110%;
+    }
+    .navbar {
+      background: linear-gradient(45deg, var(--primary), var(--secondary)) !important;
+    }
+    .navbar-brand {
+      color: #fff !important;
+      font-weight: 600;
+    }
+/* Progress bar under navbar */
+.progress { height: 5px; margin: 0; border-radius: 0; }
+.progress-bar { background: var(--secondary); }
+
+/* Slides container */
+#slides {
+  position: relative;
+  height: calc(100vh - 61px);
+  overflow: hidden;
+}
+.slide {
+  display: none;
+  height: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: background-color 0.5s;
+  background-color: #ffffff;
+}
+.slide.active { display: flex; }
+
+/* Headings with accent bar */
+.slide h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 4px solid var(--highlight);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.slide p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin-bottom: 1.5rem;
+}
+
+/* YouTube embed */
+.video-container {
+  max-width: 800px;
+  width: 90%;
+  height: 450px;
+  margin: auto;
+}
+.video-container iframe {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: none;
+}
+
+/* Interactive scenario */
+.email-card {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background: #fafafa;
+  padding: 1rem;
+  max-width: 600px;
+  width: 100%;
+  text-align: left;
+}
+.email-header { font-weight: bold; margin-top: .5rem; }
+.email-item { display: block; padding: .4rem; margin: .3rem 0; border-radius: 4px; cursor: pointer; }
+.email-item:hover { background: rgba(243,156,18,.15); }
+#scenarioFeedback { margin-top: .75rem; font-size: 1.1rem; min-height: 1.3em; text-align: center; }
+
+/* Quick tips */
+.tips-list { text-align: left; max-width: 600px; margin: 0 auto 1.5rem; font-size: 1.1rem; line-height: 1.6; }
+
+/* Quiz */
+.quiz-btn { min-width: 140px; margin: .5rem; font-size: 1.1rem; }
+.quiz-result { margin-top: 1rem; font-size: 1.2rem; min-height: 1.3em; }
+
+/* Navigation buttons */
+.wizard-nav { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 1rem; }
+.wizard-nav button { min-width: 100px; }
+
+/* Step indicator */
+.step-indicator {
+  position: fixed;
+  top: 61px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  background: rgba(255,255,255,0.9);
+  padding: 4px 10px;
+  border-radius: 4px;
+  z-index: 1001;
+}
+
+/* Accessibility tools */
+.access-tools { position: fixed; top: 70px; right: 20px; display: flex; gap: .5rem; z-index: 1000; }
+.access-tools .btn { padding: .3rem .6rem; font-size: .9rem; }
+
+/* Help button */
+.help-button { position: fixed; bottom: 20px; right: 20px; background: var(--highlight); color: #fff; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 600; box-shadow: 0 2px 6px rgba(0,0,0,0.2); z-index: 1000; }
+
+/* High‑contrast mode */
+body.high-contrast { background: #000 !important; color: #fff !important; }
+body.high-contrast .slide { background-color: #111 !important; color: #fff !important; }
+body.high-contrast .btn-outline-primary { background: #ffeb3b !important; border-color: #ffeb3b !important; color: #000 !important; }
+    
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="index.html">CyberAware</a>
+    </div>
+  </nav>
+
+  <!-- Progress Bar -->
+  <div class="progress">
+    <div id="progressBar" class="progress-bar" role="progressbar" style="width:0%"></div>
+  </div>
+
+  <!-- Accessibility Tools -->
+  <div class="access-tools">
+    <button class="btn btn-sm btn-outline-primary" id="incFont">A+</button>
+    <button class="btn btn-sm btn-outline-primary" id="decFont">A-</button>
+    <button class="btn btn-sm btn-outline-secondary" id="toggleContrast">🌓</button>
+    <button class="btn btn-sm btn-outline-success" id="readAloud">🔊</button>
+  </div>
+
+  <!-- Step Indicator -->
+  <div class="step-indicator" id="stepIndicator">Step 1 of 8</div>
+
+  <!-- Slides -->
+  <div id="slides">
+    <!-- Slide 1 -->
+    <div class="slide active">
+      <h2>Welcome to Scam Spotting</h2>
+      <p>Learn to spot phishing emails. Click <strong>Next</strong> to begin.</p>
+    </div>
+    <!-- Slide 2 -->
+    <div class="slide">
+      <h2>Watch This Short Video</h2>
+      <div class="video-container">
+        <iframe src="https://www.youtube.com/embed/Y7zNlEMDmI4"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+    <!-- Slide 3 -->
+    <div class="slide">
+      <h2>Spot the Fishy Parts</h2>
+      <p>Click parts of this email that don't look real:</p>
+      <div class="email-card">
+        <div class="email-header">From:</div>
+        <span class="email-item" data-type="address">yourbank@gmail.com</span>
+        <div class="email-header">Subject:</div>
+        <span class="email-item" data-type="subject"><em>URGENT: Verify Your Account Now!</em></span>
+        <div class="email-header">Message:</div>
+        <p>Click link or your account will lock:</p>
+        <span class="email-item" data-type="link"><a href="#">http://secure-bank.verify-login.com</a></span>
+      </div>
+      <div id="scenarioFeedback"></div>
+    </div>
+    <!-- Slide 4 -->
+    <div class="slide">
+      <h2>Quick Tips to Stay Safe</h2>
+      <ul class="tips-list">
+        <li><strong>Check the sender:</strong> Make sure the email looks right.</li>
+        <li><strong>Watch for urgency:</strong> “Act now” or “urgent” often means scam so take a moment to think 
+          and maybe contact the company via the phone to make sure its legit .</li>
+        <li><strong>Look at the link:</strong> Hover to see actual URL to see where it goes.</li>
+        <li><strong>Look for errors:</strong> Spelling mistakes and incorrect grammar are red flags.</li>
+      </ul>
+    </div>
+    <!-- Slide 5 -->
+    <div class="slide">
+      <h2>Quiz 1</h2>
+      <p>Real or Fake: an email from <code>securitie@barclays-support.co.uk</code>?</p>
+      <button class="btn btn-outline-primary quiz-btn" data-answer="fake">Fake</button>
+      <button class="btn btn-outline-primary quiz-btn" data-answer="real">Real</button>
+      <div class="quiz-result"></div>
+    </div>
+    <!-- Slide 6 -->
+    <div class="slide">
+      <h2>Quiz 2</h2>
+      <p>Why avoid clicking strange links?</p>
+      <button class="btn btn-outline-primary quiz-btn" data-answer="safe">They help updates</button>
+      <button class="btn btn-outline-primary quiz-btn" data-answer="danger">They can steal your login info</button>
+      <div class="quiz-result"></div>
+    </div>
+    <!-- Slide 7 -->
+    <div class="slide">
+      <h2>Quiz 3</h2>
+      <p>If an email asks for your password, you should:</p>
+      <button class="btn btn-outline-primary quiz-btn" data-answer="email">Email it back</button>
+      <button class="btn btn-outline-primary quiz-btn" data-answer="call">Call the company directly</button>
+      <div class="quiz-result"></div>
+    </div>
+    <!-- Slide 8 -->
+    <div class="slide">
+      <h2>Well Done!</h2>
+      <p>You’re a Scam Detective—share these tips!</p>
+      <button class="btn btn-warning" onclick="location.href='index.html'">Home</button>
+    </div>
+    <!-- Navigation -->
+    <div class="wizard-nav">
+      <button class="btn btn-outline-primary" id="prevBtn">Back</button>
+      <button class="btn btn-primary" id="nextBtn">Next</button>
+    </div>
+  </div>
+
+  <!-- Help Modal Trigger -->
+  <button class="help-button" data-bs-toggle="modal" data-bs-target="#helpModal">Need Help?</button>
+
+  <!-- Help Modal -->
+  <div class="modal fade" id="helpModal" tabindex="-1" aria-labelledby="helpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content text-dark">
+        <div class="modal-header">
+          <h5 class="modal-title" id="helpModalLabel">Need Help?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-grid gap-2">
+          <button class="btn btn-outline-primary" id="incFontModal">Bigger Text</button>
+          <button class="btn btn-outline-primary" id="decFontModal">Smaller Text</button>
+          <button class="btn btn-outline-secondary" id="toggleContrastModal">High Contrast</button>
+          <button class="btn btn-outline-success" id="readModal">Read Slide</button>
+          <button class="btn btn-outline-danger" id="stopModal">Stop Reading</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS & Wizard Logic -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const stepInd = document.getElementById('stepIndicator');
+    const progressBar = document.getElementById('progressBar');
+    let current = 0, total = slides.length;
+
+    function updateProgress(i) {
+      progressBar.style.width = ((i+1)/total*100) + '%';
+    }
+    function showSlide(i) {
+      slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+      stepInd.innerText = `Step ${i+1} of ${total}`;
+      prevBtn.style.visibility = i===0 ? 'hidden' : 'visible';
+      nextBtn.innerText = i===total-1 ? 'Finish' : 'Next';
+      updateProgress(i);
+    }
+    prevBtn.onclick = ()=>{ if(current>0) current--; showSlide(current); };
+    nextBtn.onclick = ()=>{ if(current<total-1) current++; else location.href='index.html'; showSlide(current); };
+
+    // Scenario feedback
+    document.querySelectorAll('.email-item').forEach(el => el.onclick = ()=>{
+      const t = el.dataset.type;
+      const m = t==='subject'
+        ? '✔️ Phrases that demand immediate action are a red flag.'
+        : t==='link'
+          ? '✔️ The link’s address doesn’t match your bank’s official site.'
+          : '❌ Real banks always send mail from their own domain (for example, notifications@barclays.co.uk or alerts@lloydsbank.com), never from a free service like Gmail.';
+      document.getElementById('scenarioFeedback').innerText = m;
+    });
+
+    // Quiz feedback
+    document.querySelectorAll('.quiz-btn').forEach(btn => btn.onclick = ()=>{
+      const idx = current;
+      const r = slides[idx].querySelector('.quiz-result');
+      let fb = '';
+      if(idx===4) fb = btn.dataset.answer==='fake'
+        ? '✔️ Correct! This is a phishing email.'
+        : '❌ No— There is a spelling mistake in the email.';
+      if(idx===5) fb = btn.dataset.answer==='danger'
+        ? '✔️ Exactly! Dodgy links are used to steal personal information.'
+        : '❌ No—odd links phishing.';
+      if(idx===6) fb = btn.dataset.answer==='call'
+        ? '✔️ Perfect! Call them to make sure its real.'
+        : '❌ Never email private info.';
+      r.innerText = fb;
+    });
+
+    // Accessibility
+    let fs = 110;
+    document.getElementById('incFont').onclick = ()=>{ fs+=10; document.documentElement.style.fontSize = fs+'%'; };
+    document.getElementById('decFont').onclick = ()=>{ if(fs>90) fs-=10, document.documentElement.style.fontSize = fs+'%'; };
+    document.getElementById('toggleContrast').onclick = ()=> document.body.classList.toggle('high-contrast');
+    function readSlide() {
+      const txt = slides[current].innerText;
+      if('speechSynthesis' in window){
+        speechSynthesis.cancel();
+        speechSynthesis.speak(new SpeechSynthesisUtterance(txt));
+      }
+    }
+    document.getElementById('readAloud').onclick = readSlide;
+
+    // Help modal actions
+    document.getElementById('incFontModal').onclick = ()=> document.getElementById('incFont').click();
+    document.getElementById('decFontModal').onclick = ()=> document.getElementById('decFont').click();
+    document.getElementById('toggleContrastModal').onclick = ()=> document.getElementById('toggleContrast').click();
+    document.getElementById('readModal').onclick = readSlide;
+    document.getElementById('stopModal').onclick = ()=> speechSynthesis.cancel();
+
+    // Initialize
+    showSlide(0);
+  </script>
+</body>
+</html>
